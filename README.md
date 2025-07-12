@@ -5,4 +5,4 @@
 <h3>Team Members<h3>
 <p><a href="https://github.com/ishanbtw">Ishan Mukherjee</a> (mukherjeeishan01.21@gmail.com) <p> 
 <p><a href="https://github.com/ConceptualHeap">Rajat Mondal</a> (rajatm1100@gmail.com) <p> 
-<p><a href="https://github.com/Anikettthhh">Aniket Chakraborty</a> (chakrabortyaniket050@gmail.com) <p> 
+<p><a href="https://github.com/Anikettthhh">Aniket Chakraborty</a> (chakrabortyaniket050@gmail.com) <p>

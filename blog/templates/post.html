@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+{% block content %}
+    <article class="media content-section">
+        <img src="{{ url_for('static', filename='profile_pics/'+post.author.image) }}" alt="" class="rounded-circle article-img">
+        <div class="media-body">
+        <div class="article-metadata">
+            By <a class="mr-2" href="#">{{ post.author.username }}</a>
+            <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            {% if post.author==current_user %}
+                <div>
+                    <a href="{{ url_for('update_post',post_id=post.id) }}" class="btn btn-secondary btn-sm mt-1 mb-1">Update</a>
+                    <button type='button' class="btn btn-danger btn-sm mt-1 mb-1" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete</button>
+                </div>
+            {% endif %}
+        </div>
+        <h2 class="article-title">{{ post.title }}</h2>
+        <p class="article-content">{{ post.content }}</p>
+        <div class="vote-section mt-2">
+            <form action="{{ url_for('upvote_post', post_id=post.id) }}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-success btn-sm">&#8679; Upvote</button>
+            </form>
+            <span class="mx-2">{{ post.upvotes or 0 }}</span>
+            <form action="{{ url_for('downvote_post', post_id=post.id) }}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger btn-sm">&#8681; Downvote</button>
+            </form>
+            <span class="mx-2">{{ post.downvotes or 0 }}</span>
+        </div>
+        </div>
+    </article>
+
+    <!-- Reply Form -->
+    {% if current_user.is_authenticated %}
+    <form action="{{ url_for('reply_post', post_id=post.id) }}" method="post" class="mb-4">
+        <div class="form-group">
+            <textarea class="form-control" name="reply_content" rows="2" placeholder="Write a reply..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm mt-2">Reply</button>
+    </form>
+    {% endif %}
+
+    <!-- Replies Section -->
+    <h4 class="mt-4">Replies</h4>
+    {% for reply in post.replies %}
+        <div class="media content-section mb-2">
+            <img src="{{ url_for('static', filename='profile_pics/'+reply.user.image) }}" alt="" class="rounded-circle article-img">
+            <div class="media-body">
+                <div class="article-metadata">
+                    By <a class="mr-2" href="{{ url_for('user_posts',username=reply.user.username) }}">{{ reply.user.username }}</a>
+                    <small class="text-muted">{{ reply.date_posted.strftime('%Y-%m-%d') }}</small>
+                </div>
+                <p class="article-content">{{ reply.content }}</p>
+                <div class="vote-section mt-2">
+                    <form action="{{ url_for('upvote_reply', reply_id=reply.id) }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-success btn-sm">&#8679; Upvote</button>
+                    </form>
+                    <span class="mx-2">{{ reply.upvotes or 0 }}</span>
+                    <form action="{{ url_for('downvote_reply', reply_id=reply.id) }}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">&#8681; Downvote</button>
+                    </form>
+                    <span class="mx-2">{{ reply.downvotes or 0 }}</span>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-muted">No replies yet.</p>
+    {% endfor %}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Delete Post?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-left: auto; border:0;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <form action="{{ url_for('delete_post',post_id=post.id) }}" method="POST">
+                <input type="submit" class="btn btn-danger" value="Delete">
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
